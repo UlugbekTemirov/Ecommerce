@@ -11,17 +11,30 @@ import BottomNav from "./components/BottomNav/BottomNav";
 import Home from "./pages/Home";
 import Category from "./pages/Category";
 import Basket from "./pages/Basket";
+import Auth from "./components/auth/index";
+import { Troubleshoot } from "@mui/icons-material";
 
 const App = () => {
   const [drawerState, setDrawerState] = React.useState(false);
   const pages = ["Home", "Category", "Basket"];
 
+  const [open, setOpen] = React.useState(false);
+
+  const handleOpen = () => {
+    setOpen(true);
+  };
+
   return (
     <React.Fragment>
       <Router>
-        <Navbar setDrawerState={setDrawerState} pages={pages} />
+        <Navbar
+          handleOpen={handleOpen}
+          setDrawerState={setDrawerState}
+          pages={pages}
+        />
         <Drawer setDrawerState={setDrawerState} drawerState={drawerState} />
         <BottomNav pages={pages} />
+        <Auth setOpen={setOpen} open={open} />
         <Routes>
           <Route path="home" element={<Home />} />
           <Route path="category" element={<Category />} />

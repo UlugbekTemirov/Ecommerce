@@ -1,4 +1,3 @@
-import Login from "./Register";
-import Register from "./Login";
+import Auth from "./Auth";
 
-export { Login, Register };
+export default Auth;

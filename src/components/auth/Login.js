@@ -1,7 +1,7 @@
 import * as React from "react";
 
 const Login = () => {
-  return <h1>Login</h1>;
+  return <form>login</form>;
 };
 
 export default Login;

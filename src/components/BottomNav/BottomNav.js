@@ -33,7 +33,7 @@ const BottomNav = (props) => {
     >
       {pages.map((page) => (
         <BottomNavigationAction
-          sx={{ p: 0 }}
+          sx={{ p: 0, overflow: "hidden" }}
           key={page}
           label={page}
           value={page}
@@ -44,7 +44,7 @@ const BottomNav = (props) => {
               </Link>
             )) ||
             (page === "Category" && (
-              <Link className="text-white" to={page}>
+              <Link to={page}>
                 <CategoryIcon sx={{ width: 200, height: 40, mb: -1 }} />
               </Link>
             )) ||

@@ -1,0 +1,20 @@
+[
+  {
+    "_id": "1",
+    "name": "Jonas Schmedtmann",
+    "email": "admin@natours.io",
+    "role": "admin",
+    "active": true,
+    "photo": "user-1.jpg",
+    "password": "admin1234"
+  },
+  {
+    "_id": "2",
+    "name": "Lourdes Browning",
+    "email": "loulou@example.com",
+    "role": "user",
+    "active": true,
+    "photo": "user-2.jpg",
+    "password": "TU_20030804"
+  }
+]

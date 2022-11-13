@@ -6,7 +6,6 @@ import ShoppingBasketIcon from "@mui/icons-material/ShoppingBasket";
 import CategoryIcon from "@mui/icons-material/Category";
 
 import { Link } from "react-router-dom";
-import Typography from "@mui/material/Typography";
 
 const BottomNav = (props) => {
   const { pages } = props;

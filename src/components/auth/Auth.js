@@ -5,10 +5,10 @@ import BasicModal from "../../UI/BasicModal";
 import BasicTabs from "../../UI/BasicTabs";
 
 const Auth = (props) => {
-  const { open, setOpen } = props;
+  const { open, setOpen, setAuthHandler } = props;
   return (
     <BasicModal setOpenModal={setOpen} openModal={open}>
-      <BasicTabs />
+      <BasicTabs setAuthHandler={setAuthHandler} setOpenModal={setOpen} />
     </BasicModal>
   );
 };

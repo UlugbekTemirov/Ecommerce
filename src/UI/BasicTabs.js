@@ -8,7 +8,9 @@ import TabPanel from "@mui/lab/TabPanel";
 import Login from "../components/auth/Login";
 import Register from "../components/auth/Register";
 
-export default function LabTabs() {
+export default function LabTabs(props) {
+  const { setOpenModal, setAuthHandler } = props;
+
   const [value, setValue] = React.useState("1");
 
   const handleChange = (event, newValue) => {
@@ -35,7 +37,10 @@ export default function LabTabs() {
           <Login />
         </TabPanel>
         <TabPanel value="2">
-          <Register />
+          <Register
+            setAuthHandler={setAuthHandler}
+            setOpenModal={setOpenModal}
+          />
         </TabPanel>
       </TabContext>
     </Box>

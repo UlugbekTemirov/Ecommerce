@@ -51,7 +51,6 @@ const StyledInputBase = styled(InputBase)(({ theme }) => ({
   color: "inherit",
   "& .MuiInputBase-input": {
     padding: theme.spacing(1, 1, 1, 0),
-    // vertical padding + font size from searchIcon
     paddingLeft: `calc(1em + ${theme.spacing(4)})`,
     transition: theme.transitions.create("width"),
     width: "100%",
@@ -62,7 +61,7 @@ const StyledInputBase = styled(InputBase)(({ theme }) => ({
 }));
 
 const Navbar = (props) => {
-  const [isLoggedIn, setIsLoggedIn] = React.useState(false);
+  const { authenticated } = props;
 
   const { setDrawerState, pages, handleOpen } = props;
 
@@ -208,7 +207,7 @@ const Navbar = (props) => {
             ))}
           </Box>
           <Box sx={{ flexGrow: 1 }} />
-          {isLoggedIn && (
+          {authenticated && (
             <Box sx={{ display: { xs: "none", md: "flex" } }}>
               <IconButton
                 size="large"
@@ -241,7 +240,7 @@ const Navbar = (props) => {
               </IconButton>
             </Box>
           )}
-          {isLoggedIn && (
+          {authenticated && (
             <Box sx={{ display: { xs: "flex", md: "none" } }}>
               <IconButton
                 size="large"
@@ -255,7 +254,7 @@ const Navbar = (props) => {
               </IconButton>
             </Box>
           )}
-          {!isLoggedIn && <BasicButton handleOpen={handleOpen} />}
+          {!authenticated && <BasicButton handleOpen={handleOpen} />}
         </Toolbar>
       </AppBar>
       {renderMobileMenu}

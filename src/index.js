@@ -12,8 +12,8 @@ import ThemeMode from "./UI/ThemeMode";
 
 const root = ReactDOM.createRoot(document.getElementById("root"));
 root.render(
-    <ThemeMode>
-      <App />
-      <ToastContainer />
-    </ThemeMode>
+  <ThemeMode>
+    <App />
+    <ToastContainer />
+  </ThemeMode>
 );

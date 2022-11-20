@@ -2,6 +2,9 @@ import * as React from "react";
 
 const Input = (props) => {
   const { label, type, name, pholder, value, func, isValid, error } = props;
+  if (!label && !type && !name && !pholder && !value) {
+    return;
+  }
   let validation = isValid ?? true;
 
   return (

@@ -4,21 +4,19 @@ import * as React from "react";
 import Button from "@mui/material/Button";
 import { toast } from "react-toastify";
 
-// cookies
-import Cookies from "universal-cookie";
-
 // components
 import Input from "../Input";
 
+// GLOBALS
+import { URL } from "../../globals/global";
+
 const Register = (props) => {
-  const { setOpenModal, setAuthHandler } = props;
+  const { setOpenModal, setAuthHandler, cookie } = props;
 
   const LENGTH_OF_NAME = 4;
-  const LENGTH_ERROR_4 = "At least 4 characters";
-  const INCLUDE_SIGN_ONCE_ERROR = "Include @ sign once";
+  const LENGTH_ERROR_4 = `At least ${LENGTH_OF_NAME} characters`;
   const EMAIL_FORMAT_ERROR = "Email format invalid!";
   const LENGTH_ERROR_8 = "At least 8 characters";
-  const URL = "http://localhost:8000";
 
   const [authenticated, setAuthenticated] = React.useState(false);
 
@@ -40,13 +38,12 @@ const Register = (props) => {
   const [passwordErr, setPasswordErr] = React.useState("");
   const [confirmPasswordErr, setConfirmPasswordErr] = React.useState("");
 
-  // NEW COOKIES
-  const cookie = new Cookies();
-
   // HANDLING BACKEND [POST REQUEST] ERRORS
   const [error, setError] = React.useState("");
 
   // VALIDATIONS
+  /////////////////////////////////////
+  // NAME HANDLER FUNCTION
   const getNameHandler = (e) => {
     let value = e.target.value;
     setName(value);
@@ -59,25 +56,23 @@ const Register = (props) => {
       setNameErr(LENGTH_ERROR_4);
     }
   };
+
+  // EMAIL HANDLER FUNCTION
   const getEmailHandler = (e) => {
     let value = e.target.value.trim(" ");
     setEmail(value);
-    if (
-      value.indexOf("@") !== -1 &&
-      value.trim().indexOf("@") >= 2 &&
-      !value.includes(" ")
-    ) {
-      if (value.indexOf("@") === value.lastIndexOf("@")) {
-        setCheckEmail(true);
-        setEmailErr("");
-      } else {
-        setEmailErr(INCLUDE_SIGN_ONCE_ERROR);
-      }
+    const mailformat =
+      /^[a-zA-Z0-9.!#$%&'*+/=?^_`{|}~-]+@[a-zA-Z0-9-]+(?:\.[a-zA-Z0-9-]+)*$/;
+    if (value.match(mailformat)) {
+      setCheckEmail(true);
+      setEmailErr("");
     } else {
       setCheckEmail(false);
       setEmailErr(EMAIL_FORMAT_ERROR);
     }
   };
+
+  // PASSWORD HANDLER FUNCTION
   const getPasswordHandler = (e) => {
     let value = e.target.value;
     setPassword(value);
@@ -89,6 +84,8 @@ const Register = (props) => {
       setPasswordErr(LENGTH_ERROR_8);
     }
   };
+
+  // CONFIRM PASSWORD HANDLER FUNCTION
   const getConfirmPasswordHandler = (e) => {
     let value = e.target.value;
     setConfirmPassword(value);
@@ -103,25 +100,30 @@ const Register = (props) => {
 
   // HANDLING RESPONSE FROM POST REQUEST
   const responseHandler = (res) => {
-    if (res.access_token !== undefined) {
+    if (res.token !== undefined) {
       setAuthenticated(true);
 
-      // SETTING UP COOKIES
-      cookie.set("jwt", res.access_token, { path: "/" });
+      let date = new Date(res.cookieOptions.expires);
+
+      // SETTINGUP COOKIES
+      cookie.set("jwt", res.token, { expires: date, httpOnly: false });
 
       // MODAL WINDOW CLOSER FUNCTION
       setOpenModal(false);
       setAuthHandler(true);
 
+      // SETTINGUP ERROR
       setError("");
     } else {
       setError(res.message);
+      setAuthenticated(false);
     }
   };
 
   // POST REQUEST
   const registerUserHandler = (url = "", data) => {
-    fetch(`${url}/auth/register`, {
+    console.log(JSON.stringify(data));
+    fetch(`${url}/api/v1/users/signup`, {
       method: "POST",
       headers: {
         "Content-type": "application/json",
@@ -130,7 +132,9 @@ const Register = (props) => {
     })
       .then((response) => response.json())
       .then((response) => responseHandler(response))
-      .catch((err) => console.log(`An arror has occured: ${err}`));
+      .catch((err) => {
+        console.log(err);
+      });
   };
 
   // CHECKING ALL STATES IF TRUE OR FALSE
@@ -147,9 +151,12 @@ const Register = (props) => {
   // FORM SUBMITION
   const formSubmitHandler = () => {
     if (allChecked) {
+      console.log(password, confirmPassword);
       let newUser = {
+        name,
         email,
         password,
+        passwordConfirm: confirmPassword,
       };
       registerUserHandler(URL, newUser);
 

@@ -1,14 +1,16 @@
 import * as React from "react";
-import Stack from "@mui/material/Stack";
-import Button from "@mui/material/Button";
 import BasicModal from "../../UI/BasicModal";
 import BasicTabs from "../../UI/BasicTabs";
 
 const Auth = (props) => {
-  const { open, setOpen, setAuthHandler } = props;
+  const { open, setOpen, setAuthHandler, cookie } = props;
   return (
     <BasicModal setOpenModal={setOpen} openModal={open}>
-      <BasicTabs setAuthHandler={setAuthHandler} setOpenModal={setOpen} />
+      <BasicTabs
+        cookie={cookie}
+        setAuthHandler={setAuthHandler}
+        setOpenModal={setOpen}
+      />
     </BasicModal>
   );
 };

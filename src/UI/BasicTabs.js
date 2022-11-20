@@ -5,11 +5,12 @@ import TabContext from "@mui/lab/TabContext";
 import TabList from "@mui/lab/TabList";
 import TabPanel from "@mui/lab/TabPanel";
 
+// COMPONENTS
 import Login from "../components/auth/Login";
 import Register from "../components/auth/Register";
 
 export default function LabTabs(props) {
-  const { setOpenModal, setAuthHandler } = props;
+  const { setOpenModal, setAuthHandler, cookie } = props;
 
   const [value, setValue] = React.useState("1");
 
@@ -34,10 +35,15 @@ export default function LabTabs(props) {
           </TabList>
         </Box>
         <TabPanel value="1">
-          <Login />
+          <Login
+            cookie={cookie}
+            setAuthHandler={setAuthHandler}
+            setOpenModal={setOpenModal}
+          />
         </TabPanel>
         <TabPanel value="2">
           <Register
+            cookie={cookie}
             setAuthHandler={setAuthHandler}
             setOpenModal={setOpenModal}
           />

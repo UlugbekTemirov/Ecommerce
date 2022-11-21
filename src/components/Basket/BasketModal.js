@@ -1,8 +1,12 @@
 import * as React from "react";
+
+// MUI
 import Backdrop from "@mui/material/Backdrop";
 import Box from "@mui/material/Box";
 import Modal from "@mui/material/Modal";
 import Fade from "@mui/material/Fade";
+
+// COMPONENTS
 import BasketCard from "./BasketCard";
 
 const style = {
@@ -20,14 +24,7 @@ const style = {
 };
 
 export default function BasketModal(props) {
-  const {
-    basket,
-    open,
-    handleCloseModal,
-    setCount,
-    count,
-    deleteBusketHandler,
-  } = props;
+  const { basket, open, handleCloseModal, deleteBusketHandler } = props;
 
   return (
     <div>
@@ -46,14 +43,14 @@ export default function BasketModal(props) {
           <Box sx={style}>
             {basket.map((basketItem) => (
               <BasketCard
-                deleteBusketHandler={deleteBusketHandler}
-                count={count}
-                setCount={setCount}
                 key={basketItem.name}
+                deleteBusketHandler={deleteBusketHandler}
                 basketItem={basketItem}
               />
             ))}
-            {basket.length === 0 && <h1>No products in the basket</h1>}
+            {basket.length === 0 && (
+              <h1 className="text-center">No products in the basket</h1>
+            )}
           </Box>
         </Fade>
       </Modal>

@@ -74,17 +74,14 @@ const App = () => {
     toast.success("Deleted!", { theme: "dark" });
   };
 
-  // COUNT NUMBER OF PRODUCTS IN THE BASKET
-  const [count, setCount] = React.useState(1);
-
   // ADD TO CARD HANDLER
   const addToCardHandler = (id) => {
     const getProduct = products.filter((product) => product.id === id);
-    getProduct[0].count = count;
     const product = getProduct[0];
 
     if (basket.length === 0) {
       setBasket((prev) => [...prev, product]);
+      product.basketCount = 1;
       toast.success("Product added to the busket!", { theme: "dark" });
     } else {
       let counter = 0;
@@ -95,6 +92,7 @@ const App = () => {
           ++counter;
           if (counter === basket.length) {
             setBasket((prev) => [...prev, product]);
+            product.basketCount = 1;
             toast.success("Product added to the busket!", { theme: "dark" });
           }
         }
@@ -112,8 +110,6 @@ const App = () => {
           setDrawerState={setDrawerState}
           pages={pages}
           basket={basket}
-          setCount={setCount}
-          count={count}
           deleteBusketHandler={deleteBusketHandler}
         />
         <Drawer

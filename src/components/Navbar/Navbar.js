@@ -1,4 +1,6 @@
 import * as React from "react";
+
+// MUI
 import { styled, alpha } from "@mui/material/styles";
 import AppBar from "@mui/material/AppBar";
 import Box from "@mui/material/Box";
@@ -18,6 +20,7 @@ import MoreIcon from "@mui/icons-material/MoreVert";
 import Button from "@mui/material/Button";
 import AddShoppingCartIcon from "@mui/icons-material/AddShoppingCart";
 
+// REACT-ROUTER-DOM
 import { Link } from "react-router-dom";
 
 // COMPONENTS
@@ -72,21 +75,22 @@ const Navbar = (props) => {
     setDrawerState,
     pages,
     handleOpen,
-    setCount,
-    count,
     deleteBusketHandler,
   } = props;
 
+  // MODAL STATE
   const [open, setOpen] = React.useState(false);
+
+  // MODAL OPENER FUNCTION
   const handleOpenModal = () => {
     setOpen(true);
     handleMobileMenuClose();
   };
-  const handleCloseModal = (val) => {
-    setOpen(val);
-  };
 
-  // const cookie = new Cookies();
+  // MODAL CLOSER FUNCTION
+  const handleCloseModal = (value) => {
+    setOpen(value);
+  };
 
   const [anchorEl, setAnchorEl] = React.useState(null);
   const [mobileMoreAnchorEl, setMobileMoreAnchorEl] = React.useState(null);
@@ -114,7 +118,7 @@ const Navbar = (props) => {
   // BUSKET STATE
   const [isBusketOpen, setIsBusketOpen] = React.useState(false);
 
-  // // BUSKET OPEN/CLOSE HANDLER
+  // BUSKET OPEN/CLOSE HANDLER
   const busketOpenHandler = () => {
     setIsBusketOpen(true);
     handleMobileMenuClose();
@@ -201,12 +205,10 @@ const Navbar = (props) => {
       </MenuItem>
       {open && (
         <Basket
-          count={count}
           handleCloseModal={handleCloseModal}
           open={open}
           mobileView={true}
           basket={basket}
-          setCount={setCount}
           deleteBusketHandler={deleteBusketHandler}
         />
       )}
@@ -217,15 +219,15 @@ const Navbar = (props) => {
     setDrawerState(true);
   };
 
-  const closeBusketHandler = () => {
+  const closeBusketHandler = (event) => {
     setIsBusketOpen(false);
   };
 
   return (
-    <>
+    <React.Fragment>
       {isBusketOpen && <BackStage closeBusketHandler={closeBusketHandler} />}
       <Box sx={{ flexGrow: 1 }}>
-        <AppBar position="static">
+        <AppBar position="sticky">
           <Toolbar>
             <IconButton
               size="large"
@@ -283,8 +285,6 @@ const Navbar = (props) => {
                 </IconButton>
                 {isBusketOpen && (
                   <Basket
-                    count={count}
-                    setCount={setCount}
                     mobileView={false}
                     basket={basket}
                     deleteBusketHandler={deleteBusketHandler}
@@ -342,7 +342,7 @@ const Navbar = (props) => {
         {renderMobileMenu}
         {renderMenu}
       </Box>
-    </>
+    </React.Fragment>
   );
 };
 

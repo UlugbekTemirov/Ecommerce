@@ -66,7 +66,16 @@ const StyledInputBase = styled(InputBase)(({ theme }) => ({
 }));
 
 const Navbar = (props) => {
-  const { authenticated, basket, setDrawerState, pages, handleOpen } = props;
+  const {
+    authenticated,
+    basket,
+    setDrawerState,
+    pages,
+    handleOpen,
+    setCount,
+    count,
+    deleteBusketHandler,
+  } = props;
 
   const [open, setOpen] = React.useState(false);
   const handleOpenModal = () => {
@@ -184,7 +193,7 @@ const Navbar = (props) => {
       </MenuItem>
       <MenuItem onClick={handleOpenModal}>
         <IconButton size="large" aria-label="show 2 new items" color="inherit">
-          <Badge badgeContent={2} color="error">
+          <Badge badgeContent={basket.length} color="error">
             <AddShoppingCartIcon />
           </Badge>
         </IconButton>
@@ -192,10 +201,13 @@ const Navbar = (props) => {
       </MenuItem>
       {open && (
         <Basket
+          count={count}
           handleCloseModal={handleCloseModal}
           open={open}
           mobileView={true}
           basket={basket}
+          setCount={setCount}
+          deleteBusketHandler={deleteBusketHandler}
         />
       )}
     </Menu>
@@ -265,11 +277,19 @@ const Navbar = (props) => {
                   aria-label="show 2 new items"
                   color="inherit"
                 >
-                  <Badge badgeContent={2} color="error">
+                  <Badge badgeContent={basket.length} color="error">
                     <AddShoppingCartIcon />
                   </Badge>
                 </IconButton>
-                {isBusketOpen && <Basket mobileView={false} basket={basket} />}
+                {isBusketOpen && (
+                  <Basket
+                    count={count}
+                    setCount={setCount}
+                    mobileView={false}
+                    basket={basket}
+                    deleteBusketHandler={deleteBusketHandler}
+                  />
+                )}
                 <IconButton
                   size="large"
                   aria-label="show 4 new mails"

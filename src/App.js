@@ -12,7 +12,7 @@ import Cookies from "universal-cookie";
 import Navbar from "./components/Navbar";
 import Container from "@mui/material/Container";
 import Drawer from "./components/Drawer";
-import BottomNav from "./components/BottomNav/BottomNav";
+// import BottomNav from "./components/BottomNav/BottomNav";
 
 // pages
 import Home from "./pages/Home";
@@ -26,7 +26,6 @@ import { toast } from "react-toastify";
 const App = () => {
   // COOKIES CONFIG
   const cookie = new Cookies();
-  console.log(cookie.get("jwt"));
 
   // CONTROL DRAWER STATE
   const [drawerState, setDrawerState] = React.useState(false);
@@ -51,10 +50,6 @@ const App = () => {
       : false
   );
 
-  // React.useState(() => {
-  //   // CHECK IF LOGGED IN
-  // }, []);
-
   React.useState(() => {
     if (!Boolean(cookie.get("jwt"))) {
       localStorage.removeItem("authenticated");
@@ -73,11 +68,39 @@ const App = () => {
   // DUMMY DATA FOR BASKET
   const [basket, setBasket] = React.useState([]);
 
+  // DELETE FROM BASKET FUNCTION
+  const deleteBusketHandler = (id) => {
+    setBasket(basket.filter((item) => item.id !== id));
+    toast.success("Deleted!", { theme: "dark" });
+  };
+
+  // COUNT NUMBER OF PRODUCTS IN THE BASKET
+  const [count, setCount] = React.useState(1);
+
   // ADD TO CARD HANDLER
   const addToCardHandler = (id) => {
-    const product = products.filter((product) => product.id === id);
-    toast.success("Product added to the busket!", { theme: "dark" });
-    setBasket((prev) => [...prev, product]);
+    const getProduct = products.filter((product) => product.id === id);
+    getProduct[0].count = count;
+    const product = getProduct[0];
+
+    if (basket.length === 0) {
+      setBasket((prev) => [...prev, product]);
+      toast.success("Product added to the busket!", { theme: "dark" });
+    } else {
+      let counter = 0;
+      for (let i = 0; i < basket.length; i++) {
+        if (basket[i].id === id) {
+          toast.error("Product already exist!", { theme: "dark" });
+        } else {
+          ++counter;
+          if (counter === basket.length) {
+            setBasket((prev) => [...prev, product]);
+            toast.success("Product added to the busket!", { theme: "dark" });
+          }
+        }
+      }
+      counter = 0;
+    }
   };
 
   return (
@@ -89,6 +112,9 @@ const App = () => {
           setDrawerState={setDrawerState}
           pages={pages}
           basket={basket}
+          setCount={setCount}
+          count={count}
+          deleteBusketHandler={deleteBusketHandler}
         />
         <Drawer
           pages={pages}

@@ -15,10 +15,19 @@ const style = {
   border: "2px solid #000",
   boxShadow: 24,
   p: 1,
+  height: 500,
+  overflow: "auto",
 };
 
 export default function BasketModal(props) {
-  const { basket, open, handleCloseModal } = props;
+  const {
+    basket,
+    open,
+    handleCloseModal,
+    setCount,
+    count,
+    deleteBusketHandler,
+  } = props;
 
   return (
     <div>
@@ -36,7 +45,13 @@ export default function BasketModal(props) {
         <Fade in={open}>
           <Box sx={style}>
             {basket.map((basketItem) => (
-              <BasketCard basketItem={basketItem[0]} />
+              <BasketCard
+                deleteBusketHandler={deleteBusketHandler}
+                count={count}
+                setCount={setCount}
+                key={basketItem.name}
+                basketItem={basketItem}
+              />
             ))}
             {basket.length === 0 && <h1>No products in the basket</h1>}
           </Box>

@@ -63,8 +63,12 @@ const Login = (props) => {
     }
   };
 
+  // CHECKING ALL STATES IF TRUE OR FALSE
+  let allChecked =
+    checkEmail && checkPassword && email !== "" && password !== "";
+
   // HANDLING RESPONSE FROM POST REQUEST
-  const responseHandler = (res) => {
+  const responseHandler = (res, err) => {
     if (res.token !== undefined) {
       setAuthenticated(true);
 
@@ -79,6 +83,10 @@ const Login = (props) => {
 
       // SETTINGUP ERROR
       setError("");
+    } else if (err) {
+      setError(err);
+      setEmail("");
+      setPassword("");
     } else {
       setError(res.message);
       setAuthenticated(false);
@@ -95,15 +103,11 @@ const Login = (props) => {
       body: JSON.stringify(data), // altering data to JSON format
     })
       .then((response) => response.json())
-      .then((response) => responseHandler(response))
+      .then((response) => responseHandler(response, undefined))
       .catch((err) => {
-        console.log(err);
+        responseHandler(undefined, err);
       });
   };
-
-  // CHECKING ALL STATES IF TRUE OR FALSE
-  let allChecked =
-    checkEmail && checkPassword && email !== "" && password !== "";
 
   // FORM SUBMITION
   const formSubmitHandler = () => {
@@ -116,7 +120,9 @@ const Login = (props) => {
 
       setEmail("");
       setPassword("");
-    } else return;
+    } else {
+      return;
+    }
   };
 
   // SHOW TOAST ALERT ABOUT REGISTER INFORMATION
@@ -127,11 +133,12 @@ const Login = (props) => {
   return (
     <form>
       {authenticated && alertRegisterInfo()}
+      <h1 className="text-red-700">{error}</h1>
       <Input
         label="Email"
         type="text"
         name="name"
-        pholder="John Doe"
+        pholder="example@gmail.com"
         func={getEmailHandler}
         isValid={checkEmail}
         error={emailErr}

@@ -1,11 +1,7 @@
 import * as React from "react";
 
-// COMPONENTS
-import Products from "../components/Products/Products";
-
-const Home = (props) => {
-  const { addToCardHandler } = props;
-  return <Products addToCardHandler={addToCardHandler} />;
+const Home = () => {
+  return <h1>Home Page</h1>;
 };
 
 export default Home;

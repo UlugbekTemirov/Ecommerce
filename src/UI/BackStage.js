@@ -5,7 +5,7 @@ const BackStage = (props) => {
   return (
     <div
       onClick={closeBusketHandler}
-      className="w-screen h-screen absolute bg-gray-900 z-10 opacity-75"
+      className="w-screen h-screen absolute bg-gray-900 z-10 opacity-90"
     ></div>
   );
 };

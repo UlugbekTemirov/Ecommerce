@@ -5,23 +5,27 @@ import {
   Route,
   Navigate,
 } from "react-router-dom";
+import { toast } from "react-toastify";
 
 // COOKIES
 import Cookies from "universal-cookie";
 
-import Navbar from "./components/Navbar";
+// MUI
 import Container from "@mui/material/Container";
+
+// COMPONENTS
+import Navbar from "./components/Navbar";
 import Drawer from "./components/Drawer";
-// import BottomNav from "./components/BottomNav/BottomNav";
+import Auth from "./components/auth/index";
 
 // pages
 import Home from "./pages/Home";
 import Category from "./pages/Category";
-import Auth from "./components/auth/index";
+import Products from "./pages/Products";
+import Information from "./pages/Information";
 
 // Dummy Products
 import { products } from "./products";
-import { toast } from "react-toastify";
 
 const App = () => {
   // COOKIES CONFIG
@@ -31,7 +35,7 @@ const App = () => {
   const [drawerState, setDrawerState] = React.useState(false);
 
   // PAGES
-  const pages = ["Home", "Category"];
+  const pages = ["Home", "Products", "Category"];
 
   // CONTROL MODAL STATE
   const [open, setOpen] = React.useState(false);
@@ -74,30 +78,40 @@ const App = () => {
     toast.success("Deleted!", { theme: "dark" });
   };
 
+  // SEARCH HANDLER
+  const [search, setSearch] = React.useState("");
+  const searchHandler = (search) => {
+    setSearch(search);
+  };
+
   // ADD TO CARD HANDLER
   const addToCardHandler = (id) => {
-    const getProduct = products.filter((product) => product.id === id);
-    const product = getProduct[0];
+    if (cookie.get("jwt")) {
+      const getProduct = products.filter((product) => product.id === id);
+      const product = getProduct[0];
 
-    if (basket.length === 0) {
-      setBasket((prev) => [...prev, product]);
-      product.basketCount = 1;
-      toast.success("Product added to the busket!", { theme: "dark" });
-    } else {
-      let counter = 0;
-      for (let i = 0; i < basket.length; i++) {
-        if (basket[i].id === id) {
-          toast.error("Product already exist!", { theme: "dark" });
-        } else {
-          ++counter;
-          if (counter === basket.length) {
-            setBasket((prev) => [...prev, product]);
-            product.basketCount = 1;
-            toast.success("Product added to the busket!", { theme: "dark" });
+      if (basket.length === 0) {
+        setBasket((prev) => [...prev, product]);
+        product.basketCount = 1;
+        toast.success("Product added to the busket!", { theme: "dark" });
+      } else {
+        let counter = 0;
+        for (let i = 0; i < basket.length; i++) {
+          if (basket[i].id === id) {
+            toast.error("Product already exist!", { theme: "dark" });
+          } else {
+            ++counter;
+            if (counter === basket.length) {
+              setBasket((prev) => [...prev, product]);
+              product.basketCount = 1;
+              toast.success("Product added to the busket!", { theme: "dark" });
+            }
           }
         }
+        counter = 0;
       }
-      counter = 0;
+    } else {
+      toast.error("You are not authenticated", { theme: "dark" });
     }
   };
 
@@ -111,6 +125,7 @@ const App = () => {
           pages={pages}
           basket={basket}
           deleteBusketHandler={deleteBusketHandler}
+          searchHandler={searchHandler}
         />
         <Drawer
           pages={pages}
@@ -125,9 +140,16 @@ const App = () => {
           open={open}
         />
         <Routes>
+          <Route path="/" element={<Home />} />
           <Route
-            path="/"
-            element={<Home addToCardHandler={addToCardHandler} />}
+            path="products"
+            element={
+              <Products search={search} addToCardHandler={addToCardHandler} />
+            }
+          />
+          <Route
+            path="products/:productSlug"
+            element={<Information products={products} />}
           />
           <Route path="category" element={<Category />} />
           <Route path="*" element={<Navigate to="/" replace={true} />} />

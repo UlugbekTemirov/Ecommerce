@@ -1,4 +1,7 @@
 import * as React from "react";
+import { Link } from "react-router-dom";
+
+// MUI
 import { styled } from "@mui/material/styles";
 import Card from "@mui/material/Card";
 import CardHeader from "@mui/material/CardHeader";
@@ -15,6 +18,7 @@ import MoreVertIcon from "@mui/icons-material/MoreVert";
 import AddShoppingCartIcon from "@mui/icons-material/AddShoppingCart";
 import Button from "@mui/material/Button";
 import { red } from "@mui/material/colors";
+import ProductRating from "../components/Rating";
 
 const ExpandMore = styled((props) => {
   const { expand, ...other } = props;
@@ -28,7 +32,7 @@ const ExpandMore = styled((props) => {
 }));
 
 export default function BasicCard(props) {
-  const { product, addToCardHandler } = props;
+  const { product, addToCardHandler, shareHandler } = props;
 
   const [expanded, setExpanded] = React.useState(false);
 
@@ -60,15 +64,26 @@ export default function BasicCard(props) {
         alt={product.name}
       />
       <CardContent>
-        <Typography variant="body2" color="text.secondary">
-          {product.name} | {product.model}
+        <Typography
+          sx={{ fontSize: "20px" }}
+          variant="body2"
+          color="text.primary"
+        >
+          {product.name} | {product.model} | {product.price.amount}{" "}
+          {product.price.currency}
         </Typography>
+        <ProductRating
+          rating={product.ratingsAvg}
+          ratingCount={product.ratingsCount}
+        />
       </CardContent>
       <CardActions disableSpacing>
-        <Button variant="outlined" sx={{ mr: 1 }}>
-          More
-        </Button>
-        <IconButton aria-label="share">
+        <Link to={product.slug}>
+          <Button variant="outlined" sx={{ mr: 1 }}>
+            More
+          </Button>
+        </Link>
+        <IconButton onClick={() => shareHandler(product)} aria-label="share">
           <ShareIcon />
         </IconButton>
         <IconButton

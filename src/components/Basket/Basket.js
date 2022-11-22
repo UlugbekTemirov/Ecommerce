@@ -24,7 +24,7 @@ const Basket = (props) => {
               />
             ))}
             {basket.length === 0 && (
-              <h1 className="bg-gray-800 p-4 w-60">
+              <h1 className="bg-gray-800 p-6 w-80 mt-2 text-center text-2xl rounded-lg">
                 No products found in the basket
               </h1>
             )}

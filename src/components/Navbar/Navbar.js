@@ -68,6 +68,7 @@ const StyledInputBase = styled(InputBase)(({ theme }) => ({
   },
 }));
 
+// NAVBAR COMPONENT
 const Navbar = (props) => {
   const {
     authenticated,
@@ -76,6 +77,7 @@ const Navbar = (props) => {
     pages,
     handleOpen,
     deleteBusketHandler,
+    searchHandler,
   } = props;
 
   // MODAL STATE
@@ -95,6 +97,7 @@ const Navbar = (props) => {
   const [anchorEl, setAnchorEl] = React.useState(null);
   const [mobileMoreAnchorEl, setMobileMoreAnchorEl] = React.useState(null);
 
+  // MOBILE MENU HANDLERS
   const isMenuOpen = Boolean(anchorEl);
   const isMobileMenuOpen = Boolean(mobileMoreAnchorEl);
 
@@ -254,6 +257,7 @@ const Navbar = (props) => {
               <StyledInputBase
                 placeholder="Search…"
                 inputProps={{ "aria-label": "search" }}
+                onChange={(e) => searchHandler(e.target.value)}
               />
             </Search>
             <Box sx={{ flexGrow: 1, display: { xs: "none", md: "flex" } }}>

@@ -3,13 +3,14 @@ import BasicModal from "../../UI/BasicModal";
 import BasicTabs from "../../UI/BasicTabs";
 
 const Auth = (props) => {
-  const { open, setOpen, setAuthHandler, cookie } = props;
+  const { open, setOpen, cookie, getUserHandler } = props;
   return (
     <BasicModal setOpenModal={setOpen} openModal={open}>
       <BasicTabs
         cookie={cookie}
-        setAuthHandler={setAuthHandler}
+        // setAuthHandler={setAuthHandler}
         setOpenModal={setOpen}
+        getUserHandler={getUserHandler}
       />
     </BasicModal>
   );

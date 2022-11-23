@@ -26,6 +26,7 @@ import Information from "./pages/Information";
 
 // Dummy Products
 import { products } from "./products";
+import Profile from "./pages/Profile";
 
 const App = () => {
   // COOKIES CONFIG
@@ -62,12 +63,12 @@ const App = () => {
   }, [cookie.get("jwt")]);
 
   // GETS AUTH STATE FROM REGISTER COMPONENT
-  const setAuthHandler = (authCondition) => {
-    setAuthenticated(authCondition);
+  // const setAuthHandler = (authCondition) => {
+  //   setAuthenticated(authCondition);
 
-    // STORING ISLOGGEDIN PARAM IN LOCAL STORAGE
-    localStorage.setItem("authenticated", authCondition);
-  };
+  //   // STORING ISLOGGEDIN PARAM IN LOCAL STORAGE
+  //   localStorage.setItem("authenticated", authCondition);
+  // };
 
   // DUMMY DATA FOR BASKET
   const [basket, setBasket] = React.useState([]);
@@ -115,17 +116,24 @@ const App = () => {
     }
   };
 
+  // GET USER ID HANDLER
+  const getUserHandler = (user) => {
+    localStorage.setItem("name", user.name);
+    localStorage.setItem("email", user.email);
+  };
+
   return (
     <React.Fragment>
       <Router>
         <Navbar
-          authenticated={authenticated}
+          // authenticated={authenticated}
           handleOpen={handleOpen}
           setDrawerState={setDrawerState}
           pages={pages}
           basket={basket}
           deleteBusketHandler={deleteBusketHandler}
           searchHandler={searchHandler}
+          // user={user}
         />
         <Drawer
           pages={pages}
@@ -135,9 +143,10 @@ const App = () => {
         {/* <BottomNav pages={pages} /> */}
         <Auth
           cookie={cookie}
-          setAuthHandler={setAuthHandler}
+          // setAuthHandler={setAuthHandler}
           setOpen={setOpen}
           open={open}
+          getUserHandler={getUserHandler}
         />
         <Routes>
           <Route path="/" element={<Home />} />
@@ -151,6 +160,7 @@ const App = () => {
             path="products/:productSlug"
             element={<Information products={products} />}
           />
+          <Route path="profile/:userId" element={<Profile />} />
           <Route path="category" element={<Category />} />
           <Route path="*" element={<Navigate to="/" replace={true} />} />
         </Routes>

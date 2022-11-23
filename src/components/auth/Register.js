@@ -11,7 +11,7 @@ import Input from "../Input";
 import { URL } from "../../globals/global";
 
 const Register = (props) => {
-  const { setOpenModal, setAuthHandler, cookie } = props;
+  const { setOpenModal, setAuthHandler, cookie, getUserHandler } = props;
 
   const LENGTH_OF_NAME = 4;
   const LENGTH_ERROR_4 = `At least ${LENGTH_OF_NAME} characters`;
@@ -111,6 +111,7 @@ const Register = (props) => {
       // MODAL WINDOW CLOSER FUNCTION
       setOpenModal(false);
       setAuthHandler(true);
+      getUserHandler(res.data.user);
 
       // SETTINGUP ERROR
       setError("");

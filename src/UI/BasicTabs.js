@@ -10,7 +10,7 @@ import Login from "../components/auth/Login";
 import Register from "../components/auth/Register";
 
 export default function LabTabs(props) {
-  const { setOpenModal, setAuthHandler, cookie } = props;
+  const { setOpenModal, cookie, getUserHandler } = props;
 
   const [value, setValue] = React.useState("1");
 
@@ -37,15 +37,17 @@ export default function LabTabs(props) {
         <TabPanel value="1">
           <Login
             cookie={cookie}
-            setAuthHandler={setAuthHandler}
+            // setAuthHandler={setAuthHandler}
             setOpenModal={setOpenModal}
+            getUserHandler={getUserHandler}
           />
         </TabPanel>
         <TabPanel value="2">
           <Register
             cookie={cookie}
-            setAuthHandler={setAuthHandler}
+            // setAuthHandler={setAuthHandler}
             setOpenModal={setOpenModal}
+            getUserHandler={getUserHandler}
           />
         </TabPanel>
       </TabContext>

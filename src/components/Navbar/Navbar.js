@@ -21,7 +21,7 @@ import Button from "@mui/material/Button";
 import AddShoppingCartIcon from "@mui/icons-material/AddShoppingCart";
 
 // REACT-ROUTER-DOM
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 
 // COMPONENTS
 import BasicButton from "../../UI/BasicButton";
@@ -71,7 +71,7 @@ const StyledInputBase = styled(InputBase)(({ theme }) => ({
 // NAVBAR COMPONENT
 const Navbar = (props) => {
   const {
-    authenticated,
+    // authenticated,
     basket,
     setDrawerState,
     pages,
@@ -93,6 +93,9 @@ const Navbar = (props) => {
   const handleCloseModal = (value) => {
     setOpen(value);
   };
+
+  // LOCAL STORAGE GET USER DATA
+  const name = localStorage.getItem("name");
 
   const [anchorEl, setAnchorEl] = React.useState(null);
   const [mobileMoreAnchorEl, setMobileMoreAnchorEl] = React.useState(null);
@@ -116,6 +119,16 @@ const Navbar = (props) => {
 
   const handleMobileMenuOpen = (event) => {
     setMobileMoreAnchorEl(event.currentTarget);
+  };
+
+  const cookie = new Cookies();
+  const navigate = useNavigate();
+
+  const logoutHandler = () => {
+    handleMenuClose();
+    cookie.remove("jwt", { path: "/" });
+    localStorage.clear();
+    navigate("/");
   };
 
   // BUSKET STATE
@@ -144,8 +157,10 @@ const Navbar = (props) => {
       open={isMenuOpen}
       onClose={handleMenuClose}
     >
-      <MenuItem onClick={handleMenuClose}>Profile</MenuItem>
-      <MenuItem onClick={handleMenuClose}>My account</MenuItem>
+      <Link to={`profile/${name && name.toLowerCase()}`}>
+        <MenuItem onClick={handleMenuClose}>Profile</MenuItem>
+      </Link>
+      <MenuItem onClick={logoutHandler}>Logout</MenuItem>
     </Menu>
   );
 
@@ -226,6 +241,9 @@ const Navbar = (props) => {
     setIsBusketOpen(false);
   };
 
+  const jwt = cookie.get("jwt");
+  console.log(jwt);
+
   return (
     <React.Fragment>
       {isBusketOpen && <BackStage closeBusketHandler={closeBusketHandler} />}
@@ -270,7 +288,7 @@ const Navbar = (props) => {
               ))}
             </Box>
             <Box sx={{ flexGrow: 1 }} />
-            {authenticated && (
+            {Boolean(jwt) && (
               <Box
                 sx={{
                   display: { xs: "none", md: "flex" },
@@ -325,7 +343,7 @@ const Navbar = (props) => {
                 </IconButton>
               </Box>
             )}
-            {authenticated && (
+            {Boolean(jwt) && (
               <Box sx={{ display: { xs: "flex", md: "none" } }}>
                 <IconButton
                   size="large"
@@ -340,7 +358,7 @@ const Navbar = (props) => {
               </Box>
             )}
 
-            {!authenticated && <BasicButton handleOpen={handleOpen} />}
+            {!Boolean(jwt) && <BasicButton handleOpen={handleOpen} />}
           </Toolbar>
         </AppBar>
         {renderMobileMenu}

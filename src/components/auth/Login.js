@@ -11,7 +11,7 @@ import Input from "../Input";
 import { URL } from "../../globals/global";
 
 const Login = (props) => {
-  const { setOpenModal, setAuthHandler, cookie } = props;
+  const { setOpenModal, cookie, getUserHandler } = props;
 
   const LENGTH_ERROR_8 = "At least 8 characters";
   const EMAIL_FORMAT_ERROR = "Email format invalid!";
@@ -68,27 +68,31 @@ const Login = (props) => {
     checkEmail && checkPassword && email !== "" && password !== "";
 
   // HANDLING RESPONSE FROM POST REQUEST
-  const responseHandler = (res, err) => {
+  const responseHandler = (res) => {
     if (res.token !== undefined) {
       setAuthenticated(true);
 
       let date = new Date(res.cookieOptions.expires);
 
       // SETTINGUP COOKIES
-      cookie.set("jwt", res.token, { expires: date, httpOnly: false });
+      cookie.set("jwt", res.token, {
+        expires: date,
+        httpOnly: false,
+        path: "/",
+      });
+
+      // GETTING USER DATA (App.js)
+      getUserHandler(res.data.user);
 
       // MODAL WINDOW CLOSER FUNCTION
       setOpenModal(false);
-      setAuthHandler(true);
+      // setAuthHandler(true);
 
       // SETTINGUP ERROR
       setError("");
-    } else if (err) {
-      setError(err);
-      setEmail("");
-      setPassword("");
     } else {
       setError(res.message);
+      toast.error(res.message, { theme: "dark" });
       setAuthenticated(false);
     }
   };
@@ -105,7 +109,7 @@ const Login = (props) => {
       .then((response) => response.json())
       .then((response) => responseHandler(response, undefined))
       .catch((err) => {
-        responseHandler(undefined, err);
+        console.log(err);
       });
   };
 
@@ -127,7 +131,7 @@ const Login = (props) => {
 
   // SHOW TOAST ALERT ABOUT REGISTER INFORMATION
   const alertRegisterInfo = () => {
-    authenticated && toast.success("Successfully logged", { theme: "dark" });
+    authenticated && toast.success("Successfully logged in", { theme: "dark" });
   };
 
   return (
@@ -135,6 +139,7 @@ const Login = (props) => {
       {authenticated && alertRegisterInfo()}
       <h1 className="text-red-700">{error}</h1>
       <Input
+        value={email}
         label="Email"
         type="text"
         name="name"
@@ -145,6 +150,7 @@ const Login = (props) => {
       />
       <Input />
       <Input
+        value={password}
         label="Password"
         type="password"
         name="password"

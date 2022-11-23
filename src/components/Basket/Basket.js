@@ -9,8 +9,6 @@ const Basket = (props) => {
   const { basket, mobileView, open, handleCloseModal, deleteBusketHandler } =
     props;
 
-  console.log(basket);
-
   return (
     <React.Fragment>
       {!mobileView && (

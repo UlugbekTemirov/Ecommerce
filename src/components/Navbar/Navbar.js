@@ -29,6 +29,9 @@ import Cookies from "universal-cookie";
 import Basket from "../Basket/Basket";
 import BackStage from "../../UI/BackStage";
 
+// URL
+import { URL } from "../../globals/global";
+
 const Search = styled("div")(({ theme }) => ({
   position: "relative",
   borderRadius: theme.shape.borderRadius,
@@ -71,13 +74,13 @@ const StyledInputBase = styled(InputBase)(({ theme }) => ({
 // NAVBAR COMPONENT
 const Navbar = (props) => {
   const {
-    // authenticated,
     basket,
     setDrawerState,
     pages,
     handleOpen,
     deleteBusketHandler,
     searchHandler,
+    // isAdmin,
   } = props;
 
   // MODAL STATE
@@ -93,9 +96,6 @@ const Navbar = (props) => {
   const handleCloseModal = (value) => {
     setOpen(value);
   };
-
-  // LOCAL STORAGE GET USER DATA
-  const name = localStorage.getItem("name");
 
   const [anchorEl, setAnchorEl] = React.useState(null);
   const [mobileMoreAnchorEl, setMobileMoreAnchorEl] = React.useState(null);
@@ -140,6 +140,9 @@ const Navbar = (props) => {
     handleMobileMenuClose();
   };
 
+  // LOCAL STORAGE GET NAME
+  const name = localStorage.getItem("name");
+
   const menuId = "primary-search-account-menu";
   const renderMenu = (
     <Menu
@@ -163,6 +166,10 @@ const Navbar = (props) => {
       <MenuItem onClick={logoutHandler}>Logout</MenuItem>
     </Menu>
   );
+
+  const closeBusketHandler = () => {
+    setIsBusketOpen(false);
+  };
 
   const mobileMenuId = "primary-search-account-menu-mobile";
   const renderMobileMenu = (
@@ -228,6 +235,7 @@ const Navbar = (props) => {
           mobileView={true}
           basket={basket}
           deleteBusketHandler={deleteBusketHandler}
+          closeBusketHandler={closeBusketHandler}
         />
       )}
     </Menu>
@@ -237,18 +245,30 @@ const Navbar = (props) => {
     setDrawerState(true);
   };
 
-  const closeBusketHandler = (event) => {
-    setIsBusketOpen(false);
-  };
-
   const jwt = cookie.get("jwt");
-  console.log(jwt);
+
+  const [isAdmin, setIsAdmin] = React.useState("");
+  React.useEffect(() => {
+    console.log(jwt);
+    fetch(`${URL}/api/v1/users/me`, {
+      method: "GET",
+      headers: {
+        "Content-Type": "application/json",
+        authorization: `Bearer ${jwt}`,
+      },
+    })
+      .then((promise) => promise.json())
+      .then((response) => {
+        setIsAdmin(response.data?.doc?.role);
+      })
+      .catch((err) => console.log(err));
+  }, []);
 
   return (
     <React.Fragment>
       {isBusketOpen && <BackStage closeBusketHandler={closeBusketHandler} />}
-      <Box sx={{ flexGrow: 1 }}>
-        <AppBar position="sticky">
+      <Box sx={{ flexGrow: 1, mb: 10 }}>
+        <AppBar position="fixed">
           <Toolbar>
             <IconButton
               size="large"
@@ -279,13 +299,23 @@ const Navbar = (props) => {
               />
             </Search>
             <Box sx={{ flexGrow: 1, display: { xs: "none", md: "flex" } }}>
-              {pages.map((page) => (
-                <Link key={page} to={page.toLowerCase()}>
-                  <Button sx={{ my: 2, color: "white", display: "block" }}>
-                    {page}
-                  </Button>
-                </Link>
-              ))}
+              {pages.map((page) =>
+                isAdmin !== "admin" ? (
+                  page !== "Admin" && (
+                    <Link key={page} to={page.toLowerCase()}>
+                      <Button sx={{ my: 2, color: "white", display: "block" }}>
+                        {page}
+                      </Button>
+                    </Link>
+                  )
+                ) : (
+                  <Link key={page} to={page.toLowerCase()}>
+                    <Button sx={{ my: 2, color: "white", display: "block" }}>
+                      {page}
+                    </Button>
+                  </Link>
+                )
+              )}
             </Box>
             <Box sx={{ flexGrow: 1 }} />
             {Boolean(jwt) && (
@@ -310,6 +340,7 @@ const Navbar = (props) => {
                     mobileView={false}
                     basket={basket}
                     deleteBusketHandler={deleteBusketHandler}
+                    closeBusketHandler={closeBusketHandler}
                   />
                 )}
                 <IconButton

@@ -6,11 +6,13 @@ import { toast } from "react-toastify";
 
 // COMPONENTS
 import Input from "../Input";
+import AuthLoader from "./AuthLoader";
 
 // GLOBALS
 import { URL } from "../../globals/global";
 
 const Login = (props) => {
+  const [loading, setLoading] = React.useState(false);
   const { setOpenModal, cookie, getUserHandler } = props;
 
   const LENGTH_ERROR_8 = "At least 8 characters";
@@ -69,6 +71,7 @@ const Login = (props) => {
 
   // HANDLING RESPONSE FROM POST REQUEST
   const responseHandler = (res) => {
+    setLoading(false);
     if (res.token !== undefined) {
       setAuthenticated(true);
 
@@ -80,13 +83,9 @@ const Login = (props) => {
         httpOnly: false,
         path: "/",
       });
-
-      // GETTING USER DATA (App.js)
-      getUserHandler(res.data.user);
-
+      localStorage.setItem("name", res.data.user.name);
       // MODAL WINDOW CLOSER FUNCTION
       setOpenModal(false);
-      // setAuthHandler(true);
 
       // SETTINGUP ERROR
       setError("");
@@ -99,6 +98,7 @@ const Login = (props) => {
 
   // POST REQUEST
   const loginUserHandler = (url = "", data) => {
+    setLoading(true);
     fetch(`${url}/api/v1/users/login`, {
       method: "POST",
       headers: {
@@ -166,7 +166,7 @@ const Login = (props) => {
         sx={{ mt: 3, minWidth: 150 }}
         variant="contained"
       >
-        Submit
+        Submit {loading && <AuthLoader />}
       </Button>
     </form>
   );

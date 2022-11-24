@@ -41,7 +41,14 @@ export default function BasicCard(props) {
   };
 
   return (
-    <Card sx={{ maxWidth: 345, position: "relative", borderRadius: "15px" }}>
+    <Card
+      sx={{
+        minWidth: 310,
+        position: "relative",
+        borderRadius: "15px",
+        height: "100%",
+      }}
+    >
       <CardHeader
         avatar={
           <Avatar sx={{ bgcolor: red[500] }} aria-label="recipe">
@@ -57,7 +64,7 @@ export default function BasicCard(props) {
         subheader={product.createdAt}
       />
       <CardMedia
-        sx={{ height: 200, width: 300 }}
+        sx={{ height: 200, width: "100%" }}
         component="img"
         height="194"
         image={product.coverImg}
@@ -69,12 +76,18 @@ export default function BasicCard(props) {
           variant="body2"
           color="text.primary"
         >
-          {product.name} | {product.model} | {product.price.amount}{" "}
-          {product.price.currency}
+          {product.name} | {product.brand}
+        </Typography>
+        <Typography
+          sx={{ fontSize: "20px" }}
+          variant="body2"
+          color="text.primary"
+        >
+          {product.price} USD
         </Typography>
         <ProductRating
-          rating={product.ratingsAvg}
-          ratingCount={product.ratingsCount}
+          rating={product.ratingAvg}
+          ratingCount={product.ratingCount}
         />
       </CardContent>
       <CardActions disableSpacing>

@@ -2,7 +2,7 @@ import * as React from "react";
 import { URL } from "../../globals/global";
 
 import Cookie from "universal-cookie";
-import { KeyboardReturnOutlined } from "@mui/icons-material";
+import { toast } from "react-toastify";
 
 const cookie = new Cookie();
 
@@ -26,11 +26,16 @@ const GetMeApi = () => {
       .then((response) => {
         setLoader(false);
         setData(response);
-      });
+        if (response.status === "fail") {
+          cookie.remove("jwt", { path: "/" });
+          toast.error(response.message, { theme: "dark" });
+        }
+      })
+      .catch((err) => console.log(err));
   }, []);
 
   if (loader) return { status: "loading" };
-  else if (data.length !== 0) return data?.data?.doc;
+  else if (data?.length !== 0) return data?.data?.doc;
   else return { status: "error", message: "Data not found" };
 };
 

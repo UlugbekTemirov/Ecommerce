@@ -3,12 +3,16 @@ import * as React from "react";
 import ShareModal from "../components/ShareModal";
 
 // Dummy database
-import { products } from "../products";
+// import { products } from "../products";
 
 // Components
 import BasicCard from "../UI/BasicCard";
+import ProductApi from "../components/Api/ProductsApi";
+import Loader from "../components/Loader";
 
 const Products = (props) => {
+  const products = ProductApi();
+
   const { addToCardHandler, search } = props;
 
   const [open, setOpen] = React.useState(false);
@@ -20,6 +24,8 @@ const Products = (props) => {
     setProduct(product);
     handleOpen();
   };
+
+  if (products.length === 0) return <Loader />;
 
   return (
     <Container maxWidth="xl">

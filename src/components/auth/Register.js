@@ -11,7 +11,7 @@ import Input from "../Input";
 import { URL } from "../../globals/global";
 
 const Register = (props) => {
-  const { setOpenModal, setAuthHandler, cookie, getUserHandler } = props;
+  const { setOpenModal, setAuthHandler, cookie } = props;
 
   const LENGTH_OF_NAME = 4;
   const LENGTH_ERROR_4 = `At least ${LENGTH_OF_NAME} characters`;
@@ -106,12 +106,15 @@ const Register = (props) => {
       let date = new Date(res.cookieOptions.expires);
 
       // SETTINGUP COOKIES
-      cookie.set("jwt", res.token, { expires: date, httpOnly: false });
+      cookie.set("jwt", res.token, {
+        expires: date,
+        httpOnly: false,
+        path: "/",
+      });
+      localStorage.setItem("name", res.data.user.name);
 
       // MODAL WINDOW CLOSER FUNCTION
       setOpenModal(false);
-      setAuthHandler(true);
-      getUserHandler(res.data.user);
 
       // SETTINGUP ERROR
       setError("");
@@ -123,7 +126,6 @@ const Register = (props) => {
 
   // POST REQUEST
   const registerUserHandler = (url = "", data) => {
-    console.log(JSON.stringify(data));
     fetch(`${url}/api/v1/users/signup`, {
       method: "POST",
       headers: {
@@ -152,7 +154,6 @@ const Register = (props) => {
   // FORM SUBMITION
   const formSubmitHandler = () => {
     if (allChecked) {
-      console.log(password, confirmPassword);
       let newUser = {
         name,
         email,

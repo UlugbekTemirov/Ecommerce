@@ -6,8 +6,14 @@ import BasketCard from "./BasketCard";
 import BasketModal from "./BasketModal";
 
 const Basket = (props) => {
-  const { basket, mobileView, open, handleCloseModal, deleteBusketHandler } =
-    props;
+  const {
+    basket,
+    mobileView,
+    open,
+    handleCloseModal,
+    deleteBusketHandler,
+    closeBusketHandler,
+  } = props;
 
   return (
     <React.Fragment>
@@ -16,13 +22,14 @@ const Basket = (props) => {
           <div className="md:absolute md:top-14 md:right-6 md:z-10 absolute top-0 right-2 overflow-auto max-h-96">
             {basket.map((basketItem) => (
               <BasketCard
+                closeBusketHandler={closeBusketHandler}
                 key={basketItem.name}
                 basketItem={basketItem}
                 deleteBusketHandler={deleteBusketHandler}
               />
             ))}
             {basket.length === 0 && (
-              <h1 className="bg-gray-800 p-6 w-80 mt-2 text-center text-2xl rounded-lg">
+              <h1 className="bg-gray-800 p-6 w-80 mt-2 text-center text-lg rounded-lg">
                 No products found in the basket
               </h1>
             )}
@@ -31,6 +38,7 @@ const Basket = (props) => {
       )}
       {mobileView && (
         <BasketModal
+          closeBusketHandler={closeBusketHandler}
           deleteBusketHandler={deleteBusketHandler}
           handleCloseModal={handleCloseModal}
           open={open}

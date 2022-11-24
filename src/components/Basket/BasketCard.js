@@ -8,9 +8,15 @@ import Button from "@mui/material/Button";
 import Counter from "../../util/Counter";
 
 import deleteIcon from "../../icons/delete.png";
+import { Link } from "react-router-dom";
 
 export default function BasketCard(props) {
-  const { basketItem, deleteBusketHandler } = props;
+  const {
+    basketItem,
+    deleteBusketHandler,
+    closeBusketHandler,
+    handleCloseModal,
+  } = props;
   if (basketItem.length === 0) return <h1>No products in Busket</h1>;
 
   return (
@@ -42,9 +48,17 @@ export default function BasketCard(props) {
           >
             <Counter />
           </Typography>
-          <Button sx={{ mr: 1 }} variant="outlined">
-            More
-          </Button>
+          <Link
+            onClick={() => {
+              closeBusketHandler();
+              Boolean(handleCloseModal) && handleCloseModal();
+            }}
+            to={`products/${basketItem.slug}`}
+          >
+            <Button sx={{ mr: 1 }} variant="outlined">
+              More
+            </Button>
+          </Link>
           <Button variant="outlined">Buy</Button>
         </CardContent>
       </Box>

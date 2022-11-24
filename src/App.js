@@ -10,9 +10,6 @@ import { toast } from "react-toastify";
 // COOKIES
 import Cookies from "universal-cookie";
 
-// MUI
-import Container from "@mui/material/Container";
-
 // COMPONENTS
 import Navbar from "./components/Navbar";
 import Drawer from "./components/Drawer";
@@ -25,10 +22,15 @@ import Products from "./pages/Products";
 import Information from "./pages/Information";
 
 // Dummy Products
-import { products } from "./products";
+// import { products } from "./products";
 import Profile from "./pages/Profile";
+import ProductApi from "./components/Api/ProductsApi";
+import { URL } from "./globals/global";
+import AdminDashboard from "./pages/AdminDashboard";
 
 const App = () => {
+  const products = ProductApi();
+
   // COOKIES CONFIG
   const cookie = new Cookies();
 
@@ -36,7 +38,7 @@ const App = () => {
   const [drawerState, setDrawerState] = React.useState(false);
 
   // PAGES
-  const pages = ["Home", "Products", "Category"];
+  const pages = ["Home", "Products", "Category", "Admin"];
 
   // CONTROL MODAL STATE
   const [open, setOpen] = React.useState(false);
@@ -45,30 +47,6 @@ const App = () => {
   const handleOpen = () => {
     setOpen(true);
   };
-
-  // AUTH CONTROLLER
-  const [authenticated, setAuthenticated] = React.useState(
-    localStorage.getItem("authenticated") !== null
-      ? localStorage.getItem("authenticated") === "false"
-        ? false
-        : true
-      : false
-  );
-
-  React.useState(() => {
-    if (!Boolean(cookie.get("jwt"))) {
-      localStorage.removeItem("authenticated");
-      // location.reload();
-    }
-  }, [cookie.get("jwt")]);
-
-  // GETS AUTH STATE FROM REGISTER COMPONENT
-  // const setAuthHandler = (authCondition) => {
-  //   setAuthenticated(authCondition);
-
-  //   // STORING ISLOGGEDIN PARAM IN LOCAL STORAGE
-  //   localStorage.setItem("authenticated", authCondition);
-  // };
 
   // DUMMY DATA FOR BASKET
   const [basket, setBasket] = React.useState([]);
@@ -115,25 +93,36 @@ const App = () => {
       toast.error("You are not authenticated", { theme: "dark" });
     }
   };
+  const jwt = cookie.get("jwt");
 
-  // GET USER ID HANDLER
-  const getUserHandler = (user) => {
-    localStorage.setItem("name", user.name);
-    localStorage.setItem("email", user.email);
-  };
+  const [isAdmin, setIsAdmin] = React.useState("");
+  React.useEffect(() => {
+    console.log(jwt);
+    fetch(`${URL}/api/v1/users/me`, {
+      method: "GET",
+      headers: {
+        "Content-Type": "application/json",
+        authorization: `Bearer ${jwt}`,
+      },
+    })
+      .then((promise) => promise.json())
+      .then((response) => {
+        setIsAdmin(response.data?.doc?.role);
+      })
+      .catch((err) => console.log(err));
+  }, []);
 
   return (
     <React.Fragment>
       <Router>
         <Navbar
-          // authenticated={authenticated}
+          isAdmin={isAdmin}
           handleOpen={handleOpen}
           setDrawerState={setDrawerState}
           pages={pages}
           basket={basket}
           deleteBusketHandler={deleteBusketHandler}
           searchHandler={searchHandler}
-          // user={user}
         />
         <Drawer
           pages={pages}
@@ -141,13 +130,7 @@ const App = () => {
           drawerState={drawerState}
         />
         {/* <BottomNav pages={pages} /> */}
-        <Auth
-          cookie={cookie}
-          // setAuthHandler={setAuthHandler}
-          setOpen={setOpen}
-          open={open}
-          getUserHandler={getUserHandler}
-        />
+        <Auth cookie={cookie} setOpen={setOpen} open={open} />
         <Routes>
           <Route path="/" element={<Home />} />
           <Route
@@ -160,12 +143,16 @@ const App = () => {
             path="products/:productSlug"
             element={<Information products={products} />}
           />
-          <Route path="profile/:userId" element={<Profile />} />
+          {Boolean(jwt) && (
+            <Route path="profile/:userName" element={<Profile />} />
+          )}
+          {isAdmin === "admin" && (
+            <Route path="admin" element={<AdminDashboard />} />
+          )}
           <Route path="category" element={<Category />} />
           <Route path="*" element={<Navigate to="/" replace={true} />} />
         </Routes>
       </Router>
-      <Container></Container>
     </React.Fragment>
   );
 };

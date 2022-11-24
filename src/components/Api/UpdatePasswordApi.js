@@ -1,6 +1,6 @@
 import * as React from "react";
-import { Await } from "react-router-dom";
 
+// COOKIES
 import Cookies from "universal-cookie";
 
 // COOKIE

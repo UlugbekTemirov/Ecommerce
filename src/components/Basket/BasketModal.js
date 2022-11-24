@@ -24,7 +24,13 @@ const style = {
 };
 
 export default function BasketModal(props) {
-  const { basket, open, handleCloseModal, deleteBusketHandler } = props;
+  const {
+    basket,
+    open,
+    handleCloseModal,
+    deleteBusketHandler,
+    closeBusketHandler,
+  } = props;
 
   return (
     <div>
@@ -46,6 +52,8 @@ export default function BasketModal(props) {
                 key={basketItem.name}
                 deleteBusketHandler={deleteBusketHandler}
                 basketItem={basketItem}
+                closeBusketHandler={closeBusketHandler}
+                handleCloseModal={handleCloseModal}
               />
             ))}
             {basket.length === 0 && (

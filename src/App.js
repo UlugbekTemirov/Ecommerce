@@ -25,12 +25,13 @@ import Information from "./pages/Information";
 // import { products } from "./products";
 import Profile from "./pages/Profile";
 import ProductApi from "./components/Api/ProductsApi";
-import { URL } from "./globals/global";
 import AdminDashboard from "./pages/AdminDashboard";
+import ChangeProduct from "./components/AdminDashboard/ChangeProduct";
+
+// JWT
+import { jwt } from "./globals/global";
 
 const App = () => {
-  const products = ProductApi();
-
   // COOKIES CONFIG
   const cookie = new Cookies();
 
@@ -38,7 +39,7 @@ const App = () => {
   const [drawerState, setDrawerState] = React.useState(false);
 
   // PAGES
-  const pages = ["Home", "Products", "Category", "Admin"];
+  const pages = ["Home", "Products"];
 
   // CONTROL MODAL STATE
   const [open, setOpen] = React.useState(false);
@@ -64,11 +65,9 @@ const App = () => {
   };
 
   // ADD TO CARD HANDLER
-  const addToCardHandler = (id) => {
+  const addToCardHandler = (product) => {
     if (cookie.get("jwt")) {
-      const getProduct = products.filter((product) => product.id === id);
-      const product = getProduct[0];
-
+      console.log(product);
       if (basket.length === 0) {
         setBasket((prev) => [...prev, product]);
         product.basketCount = 1;
@@ -76,7 +75,7 @@ const App = () => {
       } else {
         let counter = 0;
         for (let i = 0; i < basket.length; i++) {
-          if (basket[i].id === id) {
+          if (basket[i].id === product.id) {
             toast.error("Product already exist!", { theme: "dark" });
           } else {
             ++counter;
@@ -93,30 +92,11 @@ const App = () => {
       toast.error("You are not authenticated", { theme: "dark" });
     }
   };
-  const jwt = cookie.get("jwt");
-
-  const [isAdmin, setIsAdmin] = React.useState("");
-  React.useEffect(() => {
-    console.log(jwt);
-    fetch(`${URL}/api/v1/users/me`, {
-      method: "GET",
-      headers: {
-        "Content-Type": "application/json",
-        authorization: `Bearer ${jwt}`,
-      },
-    })
-      .then((promise) => promise.json())
-      .then((response) => {
-        setIsAdmin(response.data?.doc?.role);
-      })
-      .catch((err) => console.log(err));
-  }, []);
 
   return (
     <React.Fragment>
       <Router>
         <Navbar
-          isAdmin={isAdmin}
           handleOpen={handleOpen}
           setDrawerState={setDrawerState}
           pages={pages}
@@ -139,17 +119,14 @@ const App = () => {
               <Products search={search} addToCardHandler={addToCardHandler} />
             }
           />
-          <Route
-            path="products/:productSlug"
-            element={<Information products={products} />}
-          />
+          <Route path="products/:productSlug" element={<Information />} />
           {Boolean(jwt) && (
             <Route path="profile/:userName" element={<Profile />} />
           )}
-          {isAdmin === "admin" && (
-            <Route path="admin" element={<AdminDashboard />} />
-          )}
-          <Route path="category" element={<Category />} />
+          <Route path="admin" element={<AdminDashboard />} />
+          <Route path="admin/changeproduct" element={<ChangeProduct />} />
+
+          {/* <Route path="category" element={<Category />} /> */}
           <Route path="*" element={<Navigate to="/" replace={true} />} />
         </Routes>
       </Router>

@@ -9,9 +9,7 @@ const Input = (props) => {
 
   return (
     <label className="block mt-4">
-      <span className="after:content-['*'] after:ml-0.5 after:text-red-500 block text-lg font-large text-slate-500">
-        {label}
-      </span>
+      <span className=" block text-lg font-large text-slate-500">{label}</span>
       <input
         type={type}
         name={name}

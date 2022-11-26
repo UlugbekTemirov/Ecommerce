@@ -15,6 +15,10 @@ const Basket = (props) => {
     closeBusketHandler,
   } = props;
 
+  // const closeByTarget = (e) => {
+  //   console.dir(e.target.className);
+  // };
+
   return (
     <React.Fragment>
       {!mobileView && (

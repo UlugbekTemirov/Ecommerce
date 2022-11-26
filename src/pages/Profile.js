@@ -18,6 +18,7 @@ const Profile = (props) => {
       <h1>Name: {data?.name}</h1>
       <h1>Email: {data?.email}</h1>
       <h1>Role: {data?.role}</h1>
+      <img src={data?.photo} alt={data?.name} />
       <UpdatePassword />
     </div>
   );

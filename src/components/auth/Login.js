@@ -5,7 +5,7 @@ import Button from "@mui/material/Button";
 import { toast } from "react-toastify";
 
 // COMPONENTS
-import Input from "../Input";
+import { Input } from "../Input";
 import AuthLoader from "./AuthLoader";
 
 // GLOBALS
@@ -107,7 +107,9 @@ const Login = (props) => {
       body: JSON.stringify(data), // altering data to JSON format
     })
       .then((response) => response.json())
-      .then((response) => responseHandler(response, undefined))
+      .then((response) => {
+        responseHandler(response);
+      })
       .catch((err) => {
         console.log(err);
       });

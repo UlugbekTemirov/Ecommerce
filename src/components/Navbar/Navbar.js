@@ -80,7 +80,6 @@ const Navbar = (props) => {
     handleOpen,
     deleteBusketHandler,
     searchHandler,
-    // isAdmin,
   } = props;
 
   // MODAL STATE
@@ -247,28 +246,17 @@ const Navbar = (props) => {
 
   const jwt = cookie.get("jwt");
 
-  const [isAdmin, setIsAdmin] = React.useState("");
-  React.useEffect(() => {
-    console.log(jwt);
-    fetch(`${URL}/api/v1/users/me`, {
-      method: "GET",
-      headers: {
-        "Content-Type": "application/json",
-        authorization: `Bearer ${jwt}`,
-      },
-    })
-      .then((promise) => promise.json())
-      .then((response) => {
-        setIsAdmin(response.data?.doc?.role);
-      })
-      .catch((err) => console.log(err));
-  }, []);
+  const getClassName = (e) => {
+    if (e.target.id !== "shoppingCard") {
+      closeBusketHandler();
+    }
+  };
 
   return (
     <React.Fragment>
       {isBusketOpen && <BackStage closeBusketHandler={closeBusketHandler} />}
       <Box sx={{ flexGrow: 1, mb: 10 }}>
-        <AppBar position="fixed">
+        <AppBar onClick={(e) => getClassName(e)} position="fixed">
           <Toolbar>
             <IconButton
               size="large"
@@ -299,23 +287,13 @@ const Navbar = (props) => {
               />
             </Search>
             <Box sx={{ flexGrow: 1, display: { xs: "none", md: "flex" } }}>
-              {pages.map((page) =>
-                isAdmin !== "admin" ? (
-                  page !== "Admin" && (
-                    <Link key={page} to={page.toLowerCase()}>
-                      <Button sx={{ my: 2, color: "white", display: "block" }}>
-                        {page}
-                      </Button>
-                    </Link>
-                  )
-                ) : (
-                  <Link key={page} to={page.toLowerCase()}>
-                    <Button sx={{ my: 2, color: "white", display: "block" }}>
-                      {page}
-                    </Button>
-                  </Link>
-                )
-              )}
+              {pages.map((page) => (
+                <Link key={page} to={page.toLowerCase()}>
+                  <Button sx={{ my: 2, color: "white", display: "block" }}>
+                    {page}
+                  </Button>
+                </Link>
+              ))}
             </Box>
             <Box sx={{ flexGrow: 1 }} />
             {Boolean(jwt) && (
@@ -330,9 +308,14 @@ const Navbar = (props) => {
                   size="large"
                   aria-label="show 2 new items"
                   color="inherit"
+                  id="shoppingCard"
                 >
-                  <Badge badgeContent={basket.length} color="error">
-                    <AddShoppingCartIcon />
+                  <Badge
+                    id="shoppingCard"
+                    badgeContent={basket.length}
+                    color="error"
+                  >
+                    <AddShoppingCartIcon id="shoppingCard" />
                   </Badge>
                 </IconButton>
                 {isBusketOpen && (

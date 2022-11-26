@@ -2,12 +2,15 @@ import * as React from "react";
 import { URL, jwt } from "../../globals/global";
 
 const ProductApi = () => {
+  const [loader, setLoader] = React.useState(true);
   const [data, setData] = React.useState([]);
   const getResponseHandler = (res) => {
+    setLoader(false);
     setData(res.data.data);
   };
 
   React.useEffect(() => {
+    setLoader(true);
     fetch(`${URL}/api/v1/products`, {
       method: "GET",
       headers: {
@@ -20,7 +23,7 @@ const ProductApi = () => {
       .catch((err) => console.log(err));
   }, []);
 
-  return data;
+  return { data, loader };
 };
 
 export default ProductApi;

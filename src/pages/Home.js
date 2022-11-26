@@ -1,8 +1,7 @@
 import * as React from "react";
-import AuthLoader from "../components/auth/AuthLoader";
 
 const Home = () => {
-  return <AuthLoader />;
+  return <h1>Home Page</h1>;
 };
 
 export default Home;

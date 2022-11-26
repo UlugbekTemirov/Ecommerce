@@ -1,21 +1,18 @@
 import * as React from "react";
+import Cookies from "universal-cookie";
 import { URL } from "../../globals/global";
-
-import Cookie from "universal-cookie";
 import { toast } from "react-toastify";
 
-const cookie = new Cookie();
+const cookie = new Cookies();
 
-const GetMeApi = () => {
-  const jwt = cookie.get("jwt");
-
-  const [data, setData] = React.useState({});
-
+const IsAdminApi = () => {
+  const jwt = cookie.get("jwt", { path: "/" });
+  const [isAdmin, setIsAdmin] = React.useState("");
   const [loader, setLoader] = React.useState(true);
 
   React.useEffect(() => {
-    setLoader(true);
     if (Boolean(jwt)) {
+      setLoader(true);
       fetch(`${URL}/api/v1/users/me`, {
         method: "GET",
         headers: {
@@ -26,7 +23,7 @@ const GetMeApi = () => {
         .then((promise) => promise.json())
         .then((response) => {
           setLoader(false);
-          setData(response);
+          setIsAdmin(response.data?.doc?.role);
           if (response.status === "fail") {
             cookie.remove("jwt", { path: "/" });
             toast.error(response.message, { theme: "dark" });
@@ -34,13 +31,12 @@ const GetMeApi = () => {
         })
         .catch((err) => console.log(err));
     } else {
+      setIsAdmin("");
       setLoader(false);
     }
-  }, []);
+  }, [jwt]);
 
-  if (loader) return { status: "loading" };
-  else if (data?.length !== 0) return data?.data?.doc;
-  else return { status: "error", message: "Data not found" };
+  return { isAdmin, loader };
 };
 
-export default GetMeApi;
+export default IsAdminApi;

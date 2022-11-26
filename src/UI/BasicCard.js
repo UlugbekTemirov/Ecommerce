@@ -101,7 +101,7 @@ export default function BasicCard(props) {
         </IconButton>
         <IconButton
           aria-label="share"
-          onClick={() => addToCardHandler(product.id)}
+          onClick={() => addToCardHandler(product)}
         >
           <AddShoppingCartIcon />
         </IconButton>

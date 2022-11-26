@@ -8,13 +8,15 @@ import ListItem from "@mui/material/ListItem";
 import ListItemButton from "@mui/material/ListItemButton";
 import ListItemIcon from "@mui/material/ListItemIcon";
 import ListItemText from "@mui/material/ListItemText";
-import InboxIcon from "@mui/icons-material/MoveToInbox";
-import MailIcon from "@mui/icons-material/Mail";
 import HomeIcon from "@mui/icons-material/Home";
 import CategoryIcon from "@mui/icons-material/Category";
+import { Link } from "react-router-dom";
+import IsAdminApi from "../Api/IsAdminApi";
 
 const Drawer = (props) => {
   const { drawerState, setDrawerState, pages } = props;
+
+  const { isAdmin } = IsAdminApi();
 
   const toggleDrawer = (cond) => () => {
     setDrawerState(cond);
@@ -29,29 +31,33 @@ const Drawer = (props) => {
     >
       <List>
         {pages.map((text, index) => (
-          <ListItem key={text} disablePadding>
-            <ListItemButton>
-              <ListItemIcon>
-                {index % 2 === 0 ? <InboxIcon /> : <MailIcon />}
-              </ListItemIcon>
-              <ListItemText primary={text} />
-            </ListItemButton>
-          </ListItem>
+          <Link key={index} to={text.toLowerCase()}>
+            <ListItem key={text} disablePadding>
+              <ListItemButton>
+                <ListItemIcon>
+                  {index % 2 === 0 ? <HomeIcon /> : <CategoryIcon />}
+                </ListItemIcon>
+                <ListItemText primary={text} />
+              </ListItemButton>
+            </ListItem>
+          </Link>
         ))}
       </List>
       <Divider />
-      <List>
-        {pages.map((text, index) => (
-          <ListItem key={text} disablePadding>
-            <ListItemButton>
-              <ListItemIcon>
-                {index % 2 === 0 ? <HomeIcon /> : <CategoryIcon />}
-              </ListItemIcon>
-              <ListItemText primary={text} />
-            </ListItemButton>
-          </ListItem>
-        ))}
-      </List>
+      {isAdmin === "admin" && (
+        <Link className="p-0" to="admin/changeproduct">
+          <List sx={{ p: 0 }}>
+            <ListItem sx={{ p: 0 }}>
+              <ListItemButton>
+                <ListItemIcon>
+                  <HomeIcon />
+                </ListItemIcon>
+                <ListItemText primary={"Change Product"} />
+              </ListItemButton>
+            </ListItem>
+          </List>
+        </Link>
+      )}
     </Box>
   );
 

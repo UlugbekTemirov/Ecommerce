@@ -9,6 +9,7 @@ import Button from "@mui/material/Button";
 import Typography from "@mui/material/Typography";
 import TelegramIcon from "@mui/icons-material/Telegram";
 import { IconButton } from "@mui/material";
+import { URL } from "../../globals/global";
 
 const style = {
   position: "absolute",
@@ -46,7 +47,21 @@ const ShareModal = (props) => {
               {product.name}
             </Typography>
             <a
-              href={`https://t.me/share/url?url=http://192.168.230.110:3000/products/${product.slug}&text="something"`}
+              href={`https://t.me/share/url?url=${URL}/products/${product.slug}&text=${product.name}`}
+            >
+              <IconButton>
+                <TelegramIcon />
+              </IconButton>
+            </a>
+            <a
+              href={`https://t.me/share/url?url=${URL}/products/${product.slug}&text=${product.name}`}
+            >
+              <IconButton>
+                <TelegramIcon />
+              </IconButton>
+            </a>
+            <a
+              href={`https://t.me/share/url?url=${URL}/products/${product.slug}&text=${product.name}`}
             >
               <IconButton>
                 <TelegramIcon />

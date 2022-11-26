@@ -11,7 +11,7 @@ import ProductApi from "../components/Api/ProductsApi";
 import Loader from "../components/Loader";
 
 const Products = (props) => {
-  const products = ProductApi();
+  const { data: products, loader } = ProductApi();
 
   const { addToCardHandler, search } = props;
 
@@ -25,7 +25,7 @@ const Products = (props) => {
     handleOpen();
   };
 
-  if (products.length === 0) return <Loader />;
+  if (loader) return <Loader />;
 
   return (
     <Container maxWidth="xl">

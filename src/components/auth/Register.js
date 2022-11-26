@@ -5,7 +5,7 @@ import Button from "@mui/material/Button";
 import { toast } from "react-toastify";
 
 // components
-import Input from "../Input";
+import { Input } from "../Input";
 
 // GLOBALS
 import { URL } from "../../globals/global";

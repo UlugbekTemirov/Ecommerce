@@ -4,7 +4,6 @@ import Loader from "../Loader";
 
 const AllUsers = () => {
   const { users, loading } = GetAllUsersApi();
-  console.log(users);
 
   if (loading) return <Loader />;
 

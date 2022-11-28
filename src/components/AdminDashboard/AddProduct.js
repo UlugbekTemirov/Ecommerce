@@ -1,6 +1,6 @@
 import { Button } from "@mui/material";
 import React, { useState } from "react";
-import { Images, Input, Radio } from "../Input";
+import { Images, Input, Checkbox } from "../Input";
 import PostProductApi from "../Api/PostProductApi";
 
 const AddProduct = (props) => {
@@ -13,10 +13,10 @@ const AddProduct = (props) => {
   const [coverImg, setCoverImg] = useState(null);
   const [images, setImages] = useState(null);
   const [style, setStyle] = useState("");
-  const [price, setPrice] = useState("");
+  const [price, setPrice] = useState(0);
   const [discountPrice, setDiscountPrice] = useState("");
   const [quantity, setQuantity] = useState("");
-  const [sizes, setSizes] = useState("");
+  const [sizes, setSizes] = useState([]);
   const [color, setColor] = useState("");
   const [description, setDescription] = useState("");
 
@@ -24,8 +24,13 @@ const AddProduct = (props) => {
     setName(e.target.value);
   };
 
-  const getGenderHandler = (e) => {
-    setGender(e.target.value);
+  const getGenderHandler = (male, female, kids) => {
+    const genderList = [];
+    if (male) genderList.push("male");
+    if (female) genderList.push("female");
+    if (kids) genderList.push("kids");
+    // console.log(genderList);
+    setGender(genderList);
   };
 
   const getBrandHandler = (e) => {
@@ -45,11 +50,15 @@ const AddProduct = (props) => {
   };
 
   const getPriceHandler = (e) => {
-    setPrice(e.target.value);
+    if (e.target.value >= 0 && e.target.value <= 9999999) {
+      setPrice(e.target.value);
+    }
   };
 
   const getDiscountPriceHandler = (e) => {
-    setDiscountPrice(e.target.value);
+    if (e.target.value >= 0 && e.target.value <= 9999999) {
+      setDiscountPrice(e.target.value);
+    }
   };
 
   const getImagesHandler = (e) => {
@@ -61,11 +70,14 @@ const AddProduct = (props) => {
   };
 
   const getQuantityHandler = (e) => {
-    setQuantity(e.target.value);
+    if (e.target.value >= 0 && e.target.value <= 10000) {
+      setQuantity(e.target.value);
+    }
   };
 
   const getSizesHandler = (e) => {
-    setSizes(e.target.value);
+    const sizesList = e.target.value.split("-");
+    setSizes(sizesList);
   };
 
   const getColorHandler = (e) => {
@@ -87,7 +99,7 @@ const AddProduct = (props) => {
   const submitHandler = () => {
     const product = {
       name,
-      gender: ["men", "women"],
+      gender,
       brand,
       category,
       season: ["winter"],
@@ -108,25 +120,38 @@ const AddProduct = (props) => {
       sizes: [34, 35, 36, 37, 38, 39, 40],
       color: ["black", "gray"],
       description,
-      slug: "",
     };
     PostProductApi(product);
     // setResponse(response);
     // setLoading(loading);
   };
 
+  const [addprod, setaddprod] = React.useState(false);
+  const openAddProductHandler = () => {
+    setaddprod((prev) => !prev);
+  };
+
   return (
-    <form className="w-1/2 m-auto">
-      <h1 className="text-3xl text-center">Add Product</h1>
-      <Input
-        label="Name"
-        type="text"
-        pholder="Adidas Air 97"
-        name="name"
-        func={getNameHandler}
-        value={name}
-      />
-      {/* <div className="flex mt-5">
+    <form className="w-1/2 m-auto mt-24">
+      <h1
+        onClick={openAddProductHandler}
+        className="text-3xl text-center bg-gray-800 px-20 py-2 rounded-3xl relative cursor-pointer"
+      >
+        Add Product <span className="absolute right-10 font-bold">+</span>
+      </h1>
+      <div
+        className={`ease-in duration-300 overflow-hidden
+          ${addprod ? "h-full w-full" : "h-0 w-0"}`}
+      >
+        <Input
+          label="Name"
+          type="text"
+          pholder="Adidas Air 97"
+          name="name"
+          func={getNameHandler}
+          value={name}
+        />
+        {/* <div className="flex mt-5">
         <h1 className="text-lg font-large text-slate-500 mr-5">Gender:</h1>
         <Radio
           label="male"
@@ -145,123 +170,131 @@ const AddProduct = (props) => {
           func={getGenderHandler}
         />
       </div> */}
-      <Input
+        {/* <Input
         label="Gender"
         type="text"
         pholder="male, female, kids"
         name="gender"
         value={gender}
         func={getGenderHandler}
-      />
-      <Input
-        label="Brand"
-        type="text"
-        pholder="Nike"
-        name="brand"
-        value={brand}
-        func={getBrandHandler}
-      />
-      <Input
-        label="Category"
-        type="text"
-        pholder="shoes"
-        name="category"
-        value={category}
-        func={getCategoryHandler}
-      />
-      <Input
-        label="Season"
-        type="text"
-        pholder="winter, summer"
-        name="name"
-        value={season}
-        func={getSeasonHandler}
-      />
-      <Input
-        label="Seller"
-        type="text"
-        pholder="John Doe"
-        name="seller"
-        value={seller}
-        func={getSellerHandler}
-      />
-      <Images
-        label="Cover image"
-        type="file"
-        accept="image/png, image/jpeg"
-        name="coverImage"
-        func={getCoverImageHandler}
-      />
-      <Images
-        label="Images"
-        type="file"
-        name="images"
-        accept="image/png, image/jpeg"
-        func={getImagesHandler}
-      />
-      <Input
-        label="Style"
-        type="text"
-        pholder="sport, clasic"
-        name="style"
-        value={style}
-        func={getStyleHandler}
-      />
-      <Input
-        label="Price"
-        type="number"
-        pholder="120 USD"
-        name="price"
-        value={price}
-        func={getPriceHandler}
-      />
-      <Input
-        label="DiscountPrice"
-        type="text"
-        pholder="Adidas Air 97"
-        name="name"
-        value={discountPrice}
-        func={getDiscountPriceHandler}
-      />
-      <Input
-        label="Quantity"
-        type="number"
-        pholder="120"
-        name="quantity"
-        value={quantity}
-        func={getQuantityHandler}
-      />
-      <Input
-        label="Sizes"
-        type="text"
-        pholder="30-40"
-        name="sizes"
-        value={sizes}
-        func={getSizesHandler}
-      />
-      <Input
-        label="Color"
-        type="text"
-        pholder="black, gray, ..."
-        name="color"
-        value={color}
-        func={getColorHandler}
-      />
-      <Input
-        label="Description"
-        type="text"
-        pholder="This product is amazing ..."
-        name="description"
-        value={description}
-        func={getDescriptionHandler}
-      />
-      <Button
-        onClick={submitHandler}
-        variant="contained"
-        sx={{ mt: 2, width: "30%" }}
-      >
-        Submit
-      </Button>
+      /> */}
+        <Checkbox getGenderHandler={getGenderHandler} />
+        <Input
+          label="Brand"
+          type="text"
+          pholder="Nike"
+          name="brand"
+          value={brand}
+          func={getBrandHandler}
+        />
+        <Input
+          label="Category"
+          type="text"
+          pholder="shoes"
+          name="category"
+          value={category}
+          func={getCategoryHandler}
+        />
+        <Input
+          label="Season"
+          type="text"
+          pholder="winter, summer"
+          name="name"
+          value={season}
+          func={getSeasonHandler}
+        />
+        <Input
+          label="Seller"
+          type="text"
+          pholder="John Doe"
+          name="seller"
+          value={seller}
+          func={getSellerHandler}
+        />
+        <Images
+          label="Cover image"
+          type="file"
+          accept="image/png, image/jpeg"
+          name="coverImage"
+          id="imgSl"
+          imgName={coverImg?.name}
+          func={getCoverImageHandler}
+        />
+        <Images
+          label="Images"
+          type="file"
+          name="images"
+          id="imgsSl"
+          imgName={images?.name}
+          accept="image/png, image/jpeg"
+          func={getImagesHandler}
+        />
+        <Input
+          label="Style"
+          type="text"
+          pholder="sport, clasic"
+          name="style"
+          value={style}
+          func={getStyleHandler}
+        />
+        <Input
+          label="Price"
+          type="number"
+          pholder="120 USD"
+          name="price"
+          value={price}
+          min="1"
+          max="9999999"
+          func={getPriceHandler}
+        />
+        <Input
+          label="DiscountPrice"
+          type="text"
+          pholder="100 USD"
+          name="name"
+          value={discountPrice}
+          func={getDiscountPriceHandler}
+        />
+        <Input
+          label="Quantity"
+          type="number"
+          pholder="120"
+          name="quantity"
+          value={quantity}
+          func={getQuantityHandler}
+        />
+        <Input
+          label="Sizes"
+          type="text"
+          pholder="30-40"
+          name="sizes"
+          value={sizes}
+          func={getSizesHandler}
+        />
+        <Input
+          label="Color"
+          type="text"
+          pholder="black, gray, ..."
+          name="color"
+          value={color}
+          func={getColorHandler}
+        />
+        <Input
+          label="Description"
+          type="text"
+          pholder="This product is amazing ..."
+          name="description"
+          value={description}
+          func={getDescriptionHandler}
+        />
+        <Button
+          onClick={submitHandler}
+          variant="contained"
+          sx={{ mt: 2, width: "30%" }}
+        >
+          Submit
+        </Button>
+      </div>
     </form>
   );
 };

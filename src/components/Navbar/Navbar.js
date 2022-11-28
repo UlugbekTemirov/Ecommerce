@@ -159,7 +159,7 @@ const Navbar = (props) => {
       open={isMenuOpen}
       onClose={handleMenuClose}
     >
-      <Link to={`profile/${name && name.toLowerCase()}`}>
+      <Link to={`profile/${name && name.toLowerCase().trim(" ")}`}>
         <MenuItem onClick={handleMenuClose}>Profile</MenuItem>
       </Link>
       <MenuItem onClick={logoutHandler}>Logout</MenuItem>
@@ -269,9 +269,9 @@ const Navbar = (props) => {
               <MenuIcon />
             </IconButton>
             <Typography
+              component="div"
               variant="h6"
               noWrap
-              component="div"
               sx={{ display: { xs: "none", sm: "block" } }}
             >
               Ecommerce

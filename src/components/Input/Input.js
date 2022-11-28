@@ -1,7 +1,8 @@
 import * as React from "react";
 
 const Input = (props) => {
-  const { label, type, name, pholder, value, func, isValid, error } = props;
+  const { label, type, name, pholder, value, func, isValid, error, min, max } =
+    props;
   if (!label && !type && !name && !pholder && !value) {
     return;
   }
@@ -15,6 +16,8 @@ const Input = (props) => {
         name={name}
         value={value}
         onChange={func}
+        min={min}
+        max={max}
         className={`mt-1 px-3 py-2 text-black bg-slate-300 ${
           !validation
             ? "border-2 border-rose-500"

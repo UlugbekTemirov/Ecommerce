@@ -26,6 +26,7 @@ const Products = (props) => {
   };
 
   if (loader) return <Loader />;
+  if (products.length === 0) return <h1>No products found</h1>;
 
   return (
     <Container maxWidth="xl">

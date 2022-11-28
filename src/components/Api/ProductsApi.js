@@ -6,7 +6,7 @@ const ProductApi = () => {
   const [data, setData] = React.useState([]);
   const getResponseHandler = (res) => {
     setLoader(false);
-    setData(res.data.data);
+    setData(res.data.doc);
   };
 
   React.useEffect(() => {
